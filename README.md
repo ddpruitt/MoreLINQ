@@ -17,10 +17,10 @@ Documentation for the stable and beta releases can be found at
 MoreLINQ can be used in one of two ways. The simplest is to just import the
 `MoreLinq` namespace and all extension methods become instantly available for
 you to use on the types they extend (typically some instantiation of
-`IEnumerable<T>`). In some very rare instances, however, this cause conflicts
-with other libraries you may be using that incidentally also extend the same
-type with an identically named method and signature. This happened with
-MoreLINQ, for example, when Microsoft .NET Framework 4.0 introduced
+`IEnumerable<T>`). In some very rare instances, however, doing so can cause
+conflicts with other libraries you may be using that incidentally also extend
+the same type with an identically named method and signature. This happened
+with MoreLINQ, for example, when Microsoft .NET Framework 4.0 introduced
 [`Zip`][netzip] and [MoreLINQ already had one][zip]. Starting with version 3.0
 of MoreLINQ, you can reduce the potential for present (or even future)
 conflicts by individually importing just the extension methods you need using
@@ -55,7 +55,7 @@ extension methods as well as all the regular static methods on
 [lead]: https://morelinq.github.io/2.0/ref/api/html/Overload_MoreLinq_MoreEnumerable_Lead.htm
 [using-static]: https://docs.microsoft.com/en-us/dotnet/articles/csharp/whats-new/csharp-6#using-static
 [netzip]: https://docs.microsoft.com/en-us/dotnet/api/system.linq.enumerable.zip--3
-[zip]: https://morelinq.github.io/2.0/ref/api/html/M_MoreLinq_MoreEnumerable_Zip__3.htm
+[zip]: https://morelinq.github.io/1.x/ref/api/html/M_MoreLinq_MoreEnumerable_Zip__3.htm
 [unfold]: https://morelinq.github.io/2.3/ref/api/html/M_MoreLinq_MoreEnumerable_Unfold__3.htm
 [random]: https://morelinq.github.io/2.0/ref/api/html/Overload_MoreLinq_MoreEnumerable_Random.htm
 [sequence]: https://morelinq.github.io/2.2/ref/api/html/Overload_MoreLinq_MoreEnumerable_Sequence.htm
@@ -93,9 +93,15 @@ locally using any HTTP server of static files, like
 
 ### Acquire
 
-Ensures that a source sequence of objects are all acquired successfully. If
-the acquisition of any one fails then those successfully acquired till that
-point are disposed
+Ensures that a source sequence of disposable objects are all acquired
+successfully. If the acquisition of any one fails then those successfully
+acquired till that point are disposed.
+
+### Aggregate
+
+Applies multiple accumulators sequentially in a single pass over a sequence.
+
+This method has 7 overloads.
 
 ### AggregateRight
 
@@ -111,7 +117,7 @@ Returns a sequence consisting of the head element and the given tail elements.
 ### Assert
 
 Asserts that all elements of a sequence meet a given condition otherwise
-throws an object.
+throws an exception.
 
 This method has 2 overloads.
 
@@ -150,7 +156,7 @@ Returns the Cartesian product of two or more sequences by combining each
 element from the sequences and applying a user-defined projection to the
 set.
 
-This method has 8 overloads.
+This method has 7 overloads.
 
 ### Choose
 
@@ -212,8 +218,9 @@ This method has 2 overloads.
 
 ### EquiZip
 
-Returns a projection of tuples, where each tuple contains the N-th element
-from each of the argument sequences.
+Returns a projection of tuples, where each tuple contains the N-th
+element from each of the argument sequences. An exception is thrown
+if the input sequences are of different lengths.
 
 This method has 3 overloads.
 
@@ -238,6 +245,8 @@ Excludes elements from a sequence starting at a given index
 Returns the elements of a sequence and falls back to another if the original
 sequence is empty.
 
+This method has 6 overloads.
+
 ### FillBackward
 
 Returns a sequence with each null reference or value in the source replaced
@@ -256,7 +265,7 @@ This method has 3 overloads.
 
 Flattens a sequence containing arbitrarily-nested sequences.
 
-This method has 2 overloads.
+This method has 3 overloads.
 
 ### Fold
 
@@ -302,7 +311,7 @@ Returns a sequence of values based on indexes
 Groups the adjacent elements of a sequence according to a specified key
 selector function.
 
-This method has 4 overloads.
+This method has 6 overloads.
 
 ### ~~Incremental~~
 
@@ -316,6 +325,16 @@ the source sequence.
 
 This method has 2 overloads.
 
+### IndexBy
+
+
+Applies a key-generating function to each element of a sequence and returns
+a sequence that contains the elements of the original sequence as well its
+key and index inside the group of its key. An additional argument specifies
+a comparer to use for testing equivalence of keys.
+
+This method has 2 overloads.
+
 ### Insert
 
 Inserts the elements of a sequence into another sequence at a specified index.
@@ -324,8 +343,6 @@ Inserts the elements of a sequence into another sequence at a specified index.
 
 Interleaves the elements of two or more sequences into a single sequence,
 skipping sequences as they are consumed.
-
-This method has 2 overloads.
 
 ### Lag
 
@@ -405,9 +422,13 @@ which is only returned as the predecessor of the second element
 
 Combines `OrderBy` (where element is key) and `Take` in a single operation.
 
+This method has 4 overloads.
+
 ### PartialSortBy
 
 Combines `OrderBy` and `Take` in a single operation.
+
+This method has 4 overloads.
 
 ### Partition
 
@@ -473,6 +494,10 @@ Repeats the sequence indefinitely or a specific number of times.
 
 This method has 2 overloads.
 
+### Return
+
+Returns a single-element sequence containing the item provided.
+
 ### RightJoin
 
 Performs a right outer join between two sequences.
@@ -490,6 +515,13 @@ This method has 2 overloads.
 ### Scan
 
 Peforms a scan (inclusive prefix sum) on a sequence of elements.
+
+This method has 2 overloads.
+
+### ScanBy
+
+Applies an accumulator function over sequence element keys, returning the keys
+along with intermediate accumulator states.
 
 This method has 2 overloads.
 
@@ -605,7 +637,7 @@ This method has 4 overloads.
 Creates a delimited string from a sequence of values. The delimiter used
 depends on the current culture of the executing thread.
 
-This method has 30 overloads.
+This method has 15 overloads.
 
 ### ToDictionary
 
@@ -654,8 +686,6 @@ Returns a sequence generated by applying a state to the generator function,
 and from its result, determines if the sequence should have a next element and
 its value, and the next state in the recursive call.
 
-This method has 2 overloads.
-
 ### Window
 
 Processes a sequence into a series of subsequences representing a windowed
@@ -679,15 +709,19 @@ Creates a right-aligned sliding window over the source sequence of a given size.
 
 ### ZipLongest
 
-Returns a projection of tuples, where each tuple contains the N-th element
-from each of the argument sequences
+Returns a projection of tuples, where each tuple contains the N-th
+element from each of the argument sequences. The resulting sequence
+will always be as long as the longest of input sequences where the
+default value of each of the shorter sequence element types is used
+for padding.
 
 This method has 3 overloads.
 
 ### ZipShortest
 
-Returns a projection of tuples, where each tuple contains the N-th element
-from each of the argument sequences.
+Returns a projection of tuples, where each tuple contains the N-th
+element from each of the argument sequences. The resulting sequence
+is as short as the shortest input sequence.
 
 This method has 3 overloads.
 
@@ -701,6 +735,13 @@ SOLICIT FEEDBACK ON THEIR UTILITY AND DESIGN/IMPLEMENTATION DEFECTS.
 
 Use of experimental methods requires importing the `MoreLinq.Experimental`
 namespace.
+
+### Aggregate
+
+Applies multiple accumulator queries sequentially in a single pass over a
+sequence.
+
+This method has 8 overloads.
 
 ### Await
 
@@ -720,6 +761,14 @@ final result given the source item and completed task.
 Creates a sequence that lazily caches the source as it is iterated for the
 first time, reusing the cache thereafter for future re-iterations. If the
 source is already cached or buffered then it is returned verbatim.
+
+### TrySingle
+
+Returns the only element of a sequence that has just one element. If the
+sequence has zero or multiple elements, then returns a user-defined value
+that indicates the cardinality of the result sequence.
+
+This method has 2 overloads.
 
 
 [#122]: https://github.com/morelinq/MoreLINQ/issues/122
